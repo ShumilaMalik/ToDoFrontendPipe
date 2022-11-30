@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+    />
+
+    <title>Shumi´s ToDo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <style>
+      body{
+        background-color: #f9f9fa;
+      }
+      .force-pull-right{
+        position:absolute;
+        right: 10px;
+      }
+      .done{
+        text-decoration: line-through;
+      }
+      .form-check-input:checked{
+        background-color:#a6f1c2 ;
+        border-color:#083347 ;
+      }
+          .btn-primary {
+            border: 1px solid #083347;
+            border-left: none !important;
+      --bs-btn-color: #000;
+      --bs-btn-bg: #a6f1c2;
+      --bs-btn-border-color: #a6f1c2;
+      --bs-btn-hover-color: #000;
+      --bs-btn-hover-bg: #083347;
+      --bs-btn-hover-border-color: #083347;
+      --bs-btn-focus-shadow-rgb: 49,132,253;
+      --bs-btn-active-color: #000;
+      --bs-btn-active-bg: #083347;
+      --bs-btn-active-border-color: #083347;
+      --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+      --bs-btn-disabled-color: #000;
+      --bs-btn-disabled-bg: #a6f1c2;
+      --bs-btn-disabled-border-color: #a6f1c2;
+    }
+        .input-group-text {
+      display: flex;
+      align-items: center;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      text-align: center;
+      white-space: nowrap;
+      background-color: #a6f1c2;
+      border: 1px solid #083347;
+      border-radius: .375rem;
+    }
+
+    .form-control{
+      border: 1px solid #083347;
+      border-left: none !important;
+    }
+    </style>
+
+  
+
+  </head>
+
+
+  <body>
+    <div class="container pt-5">
+      <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+        <h2>TechstarterToDo App</h2>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+      <div class="card rounded-0">
+        <div class="card-body">
+          <div class="row">
+          <div class="col">
+            <h4>Eintrag Hinzufügen</h4>
+        </div>
+      </div>
+
+            <div class="row">
+            <div class="col">
+              <div class="input-group mb-3">
+                <span class="input-group-text rounded-0" id="inputGroup-sizing-default">Neue Todo:</span>
+                <input type="text" class="form-control rounded-0" placeholder="Neuer Eintrag" id="text">
+                <button type="button" onclick="addItemToList()" class="btn btn-primary rounded-0">Eintrag hinzufügen</button>
+
+              </div>
+              
+          </div>
+        </div>
+        <div class="row">
+        </div>
+        <div class="row pt-3">
+        <div class="col">
+            <h4>Aktuelle Todos</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+
+          <ul class="list-group list-group-flush" id="list">
+            <li class="list-group-item done text-muted" id="todoItem_1">
+              <input class="form-check-input me-1 rounded-0" type="checkbox" checked value="" aria-label="...">
+              First checkbox <i class="bi bi-x-square force-pull-right"></i>
+            </li>
+            <li class="list-group-item" id="todoItem_2">
+              <input class="form-check-input me-1 rounded-0" type="checkbox" value="" aria-label="...">
+              Second checkbox<i class="bi bi-x-square force-pull-right"></i>
+            </li>
+          </ul>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+    </div>
+    
+  <div class="row">
+    <div class="col-12 col-md-8 offset-md-2"><small class="text-mutet">&copy;2022 Shamila Malik</small></div>
+  </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        loadList();
+  
+      })
+
+      $(document).on("change", ".tddCheckbox", function(){
+        let todoId = $(this).prop("value")
+        let checkedStatus = $(this).prop("checked")
+       
+        $.ajax({
+          url: "https://api.techstarter.dev/todos",
+          method: "PUT",
+        data:JSON.stringify({ id: todoId, done: checkedStatus }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+        }).done(function(data) {
+        updateList(data)
+  });
+
+
+      })
+      
+  
+      function loadList(){
+        $.ajax({
+    url: "https://api.techstarter.dev/todos",
+   
+  }).done(function(data) {
+  updateList(data)
+  });
+      }
+      
+      function updateList(data){
+        $("#list").empty();
+  
+        for(let i = 0; i < data.length; i++){
+  
+          let completedClass = ""
+          let checkboxChecked = ""
+  
+          if(data[i]['done'] == "true"){
+          completedClass = "done text-muted"
+          checkboxChecked = 'checked="checked"'
+          }
+  
+        let todoItem = ` <li class="list-group-item ${completedClass}" id="item_${data[i]['id']}">
+                <input class="form-check-input me-1 rounded-0 tddCheckbox" type="checkbox" ${checkboxChecked} value="${data[i]['id']}" aria-label="...">
+                ${data[i]['name']} <i onClick="deleteItem('${data[i]['id']}')" class="bi bi-x-square force-pull-right"></i>
+              </li>`
+          $("#list").append(todoItem); 
+      }
+    }
+  
+          function deleteItem(id){
+          $.ajax({
+            url: "https://api.techstarter.dev/todos/" + id,
+            crossDomain: true,
+            method: "DELETE",
+           
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+        }).done(function(data) {
+        updateList(data)
+        });
+          }
+  
+  
+     function addItemToList(){
+     let content = $( "#text" ).val();
+     $.ajax({
+    url: "https://api.techstarter.dev/todos",
+    method: "POST",
+   data:JSON.stringify({ name: content }),
+   contentType: "application/json; charset=utf-8",
+   dataType: "json"
+  }).done(function(data) {
+  updateList(data)
+  });
+       
+  
+     }
+  
+    </script>
+
+  </body>
+</html>
